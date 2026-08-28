@@ -25,4 +25,4 @@ There is no stable build available yet. Installation, setup, and usage instructi
 
 ## Documentation
 
-Want to learn more about the project's goals, specifications, architecture, technical decisions, and research? Explore the [`/docs`](./docs/README.md) directory.
+Want to learn more about the project's goals, specifications, architecture, technical decisions, and research? Explore the [📁 Docs](./docs/README.md) directory.

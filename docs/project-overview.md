@@ -10,7 +10,7 @@
 
 This document defines why the project exists, who it is intended for, what it aims to achieve, and the boundaries under which it is being developed. It is a high-level reference for the product and the college final project.
 
-Detailed functional requirements belong in the system specification. Technical organization and implementation decisions belong in the [ 📁 Docs | Architecture ](architecture/README.md) and [ 📁 Docs | Architecture Decision Records ](adr/README.md).
+Detailed functional requirements belong in the system specification. Technical organization and implementation decisions belong in [ 📁 Architecture ](architecture/README.md) and [ 📁 Architecture Decision Records ](adr/README.md).
 
 ## Problem
 
