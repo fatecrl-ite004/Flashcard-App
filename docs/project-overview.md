@@ -4,7 +4,7 @@
 > **Last reviewed:** 2026-08-28  
 > **Working title:** Flashcard App  
 > **Required delivery platform:** Android development build  
-> **Official institutional deadline:** 11/18/2026
+> **Official institutional deadline:** 2026-11-18
 
 ## Document purpose
 
