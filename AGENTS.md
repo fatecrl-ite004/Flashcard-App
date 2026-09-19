@@ -36,7 +36,7 @@ At requirement level, `docs/system-specification.md` is canonical. `docs/project
 
 ## Current implementation phase
 
-The current implementation work is an exploration of `ts-fsrs` and the first version of the domain in pure TypeScript. Phase 1 describes the complete TCC delivery target; it does not authorize implementing every Phase 1 feature during the current domain task.
+The current implementation work is an exploration of `ts-fsrs` and the first version of the domain in pure TypeScript. Phase 1 describes the complete final TCC delivery target, planned for June 2027; it does not authorize implementing every Phase 1 feature during the current domain task. The institutional TCC I checkpoint on 2026-11-18 has intermediate academic deliverables and does not require completion of Phase 1.
 
 During the exploration phase:
 

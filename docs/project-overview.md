@@ -4,7 +4,8 @@
 > **Last reviewed:** 2026-08-31
 > **Working title:** Flashcard App  
 > **Required delivery platform:** Android development build  
-> **Official institutional deadline:** 2026-11-18
+> **Institutional checkpoint — TCC I:** 2026-11-18
+> **Target for final TCC delivery:** June 2027
 
 ## Document purpose
 
@@ -151,7 +152,8 @@ It includes:
 ## Restrictions and constraints
 
 - The project is primarily developed by one student alongside college, internship, and personal obligations.
-- The expected development horizon is approximately twelve months, with the official institutional deadline set for 2026-11-18.
+- The expected development horizon is approximately twelve months. The TCC I institutional checkpoint is 2026-11-18; it covers the material required by that course and does not require the complete Phase 1 application.
+- The complete Phase 1 application, user validation, technical documentation, and monograph are targeted for the final TCC delivery in June 2027.
 - Phase 1 must be deliverable as an Android development build. A Play Store release is not required.
 - Phase 1 targets Android smartphones. Tablet adaptation and a PWA are Phase 2 additions, not Phase 1 success conditions.
 - Every Phase 1 study workflow must function without an internet connection.

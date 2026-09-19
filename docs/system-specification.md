@@ -3,14 +3,14 @@
 > **Status do documento:** Em elaboração<br>
 > **Última revisão:** 2026-08-31<br>
 > **Idioma:** Português brasileiro, por se tratar também de uma entrega acadêmica<br>
-> **Baseline atual:** Fase 1 — entrega obrigatória do TCC<br>
+> **Baseline atual:** Fase 1 — entrega final obrigatória do TCC<br>
 > **Sincronização com GitHub Projects:** Ainda não iniciada
 
 ## Propósito
 
 Este documento registra os requisitos funcionais (RF), as regras de negócio (RN) e os requisitos não funcionais (RNF) do Flashcard App. Ele também funciona como matriz inicial de rastreabilidade, relacionando cada requisito aos futuros casos de uso, elementos de design e casos de teste.
 
-A Fase 1 representa a entrega obrigatória do TCC. A Fase 2 contém extensões condicionais, que somente poderão avançar quando a Fase 1 estiver estável e houver autorização explícita. A Fase 3 é um roadmap pós-TCC e não autoriza implementação ou infraestrutura antecipada.
+A Fase 1 representa a entrega final obrigatória do TCC, prevista para junho de 2027. O marco institucional de TCC I, em 18 de novembro de 2026, possui entregas acadêmicas intermediárias e não exige a implementação completa da Fase 1. A Fase 2 contém extensões condicionais, que somente poderão avançar quando a Fase 1 estiver estável e houver autorização explícita. A Fase 3 é um roadmap pós-TCC e não autoriza implementação ou infraestrutura antecipada.
 
 ## Convenções
 
@@ -73,7 +73,7 @@ O valor **A definir** indica que o artefato correspondente ainda não foi criado
 | RF-023 | Encerrar sessão antecipadamente | O sistema deve permitir que o usuário saia da sessão a qualquer momento, preservando todas as avaliações já concluídas. | A definir | A definir | A definir | Alta | Aprovado |
 | RF-024 | Desfazer última avaliação | Durante uma sessão, o sistema deve permitir que o usuário desfaça a avaliação mais recente e retorne ao card correspondente. | A definir | A definir | A definir | Alta | Aprovado |
 | RF-025 | Finalizar sessão | Quando não restarem cards na sessão atual, o sistema deve informar sua finalização e permitir que o usuário retorne às informações do deck ou à biblioteca. | A definir | A definir | A definir | Alta | Aprovado |
-| RF-026 | Exibir disponibilidade de cards | O sistema deve informar de maneira neutra a quantidade de cards atualmente disponíveis para revisão em um deck. A forma, a localização da apresentação e a possível exibição da data da próxima revisão ainda serão definidas. | A definir | A definir | A definir | Média | Em discussão |
+| RF-026 | Exibir disponibilidade de cards | O sistema deve informar de maneira neutra a quantidade de cards atualmente disponíveis para revisão em um deck. A forma, a localização da apresentação e a possível exibição da data da próxima revisão ainda serão definidas. | A definir | A definir | A definir | Alta | Aprovado |
 | RF-027 | Exibir informações avançadas do FSRS | O sistema deve disponibilizar informações avançadas de agendamento em uma área inicialmente recolhida e expansível após as informações principais do deck. | A definir | A definir | A definir | Alta | Aprovado |
 | RF-028 | Configurar início do dia de estudo | O sistema deve permitir que o usuário altere globalmente o horário que determina o início de um novo dia de estudo. | A definir | A definir | A definir | Alta | Aprovado |
 | RN-001 | Importação integral | Um arquivo JSON somente pode ser aceito quando sua estrutura completa for válida e todos os dados necessários puderem ser importados. Uma importação inválida não pode produzir decks ou cards parcialmente importados. | A definir | A definir | A definir | Alta | Aprovado |
@@ -84,7 +84,7 @@ O valor **A definir** indica que o artefato correspondente ainda não foi criado
 | RN-006 | Limite diário de cards novos | A quantidade de cards novos introduzidos em um dia de estudo não pode ultrapassar o limite configurado para o deck. | A definir | A definir | A definir | Alta | Aprovado |
 | RN-007 | Limite de cards por sessão | A composição inicial de uma sessão deve respeitar o limite de cards por sessão configurado para o deck. | A definir | A definir | A definir | Alta | Aprovado |
 | RN-008 | Excesso de cards devidos | O comportamento da sessão quando a quantidade de cards devidos ultrapassar o limite configurado ainda deve ser definido, incluindo a possibilidade de continuação opcional. | A definir | A definir | A definir | Alta | Em discussão |
-| RN-009 | Desativação do limite da sessão | A possibilidade de o usuário desativar o limite de cards por sessão ainda deve ser avaliada. | A definir | A definir | A definir | Média | Em discussão |
+| RN-009 | Desativação do limite da sessão | A possibilidade de o usuário desativar o limite de cards por sessão ainda deve ser avaliada. | A definir | A definir | A definir | Alta | Aprovado |
 | RN-010 | Avaliação após revelação | As opções de avaliação somente podem ser disponibilizadas depois que o usuário revelar o verso do card. | A definir | A definir | A definir | Alta | Aprovado |
 | RN-011 | Cálculo pelo FSRS v6 | O próximo estado de agendamento deve ser calculado pelo FSRS v6, por meio de ts-fsrs, considerando o estado atual do card, a data da revisão, a avaliação escolhida e a retenção desejada do deck. A aplicação não deve substituir o algoritmo por intervalos manuais. | A definir | A definir | A definir | Alta | Aprovado |
 | RN-012 | Comportamento de Again | A aplicação não deve obrigar um card avaliado como Again a retornar repetidamente até uma resposta correta. Seu reagendamento e eventual retorno devem seguir o comportamento validado do FSRS v6. | A definir | A definir | A definir | Alta | Aprovado |
@@ -101,8 +101,8 @@ O valor **A definir** indica que o artefato correspondente ainda não foi criado
 | RNF-007 | Adaptação a smartphones Android | A interface da Fase 1 deve permanecer utilizável nas resoluções de smartphones Android definidas como suportadas pelo projeto. Tablets não fazem parte desta fase. | A definir | A definir | A definir | Alta | Aprovado |
 | RNF-008 | Duração da animação de giro | A animação de giro utilizada para revelar o verso do card deve possuir duração de 200 ms. | A definir | A definir | A definir | Alta | Aprovado |
 | RNF-009 | Entrega Android | A Fase 1 deve ser disponibilizada como um development build Android instalável e utilizável para o fluxo obrigatório de estudo. | A definir | A definir | A definir | Alta | Aprovado |
-| RNF-010 | Critério de usabilidade | Os participantes da avaliação devem conseguir concluir as tarefas representativas dentro dos limites que serão definidos previamente no protocolo de pesquisa. | A definir | A definir | A definir | Alta | Em discussão |
-| RNF-011 | Critério de satisfação | A avaliação com usuários deve alcançar o limiar de satisfação que será definido previamente no protocolo de pesquisa. | A definir | A definir | A definir | Alta | Em discussão |
+| RNF-010 | Critério de usabilidade | Os participantes da avaliação devem conseguir concluir as tarefas representativas dentro dos limites que serão definidos previamente no protocolo de pesquisa. | A definir | A definir | A definir | Alta | Aprovado |
+| RNF-011 | Critério de satisfação | A avaliação com usuários deve alcançar o limiar de satisfação que será definido previamente no protocolo de pesquisa. | A definir | A definir | A definir | Alta | Aprovado |
 | RNF-012 | Funcionalidade essencial sem paywall | Os fluxos essenciais de estudo local devem permanecer gratuitos e não podem ser condicionados a assinatura ou pagamento. | A definir | A definir | A definir | Alta | Aprovado |
 
 ## Fase 2 — Extensões condicionais do TCC

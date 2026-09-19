@@ -1,9 +1,9 @@
-ARCHITECTURE DECISION RECORDS (ADR)
+# ARCHITECTURE DECISION RECORDS (ADR)
 
 Esta pasta é responsável por mostrar todas as decisões de design arquitetural do sistema, como o uso de uma linguagem, banco de dados, APIs.
 Tudo é registrado com objetivo de que futuramente qualquer pessoa, possa entender nossas decisões de arquiteturas tomadas no delongo de nosso desenvolvimento.
 
-ORGANIZAÇÃO 
+# ORGANIZAÇÃO 
 
 As ADRs serão inumeradas em ordem de criação.
 
@@ -13,7 +13,7 @@ ADR/
   |- 0003-...
   |- 00...
 
-ESTRUTURA DAS ADRs
+# ESTRUTURA DAS ADRs
 
 - Numeração
 - Titulo
@@ -27,6 +27,6 @@ ESTRUTURA DAS ADRs
 - Consequências
 - Referencias
 
-IMPORTANTE
+# IMPORTANTE
 
 Todas as ADRs continuarão em nossa pasta, mesmo com mudanças de decisões ao longo do projeto, pois tudo precisa ser registrado, junto com seu contexto.
