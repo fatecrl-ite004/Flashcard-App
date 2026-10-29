@@ -1,7 +1,7 @@
 # Project Overview
 
 > **Status:** Active  
-> **Last reviewed:** 2026-08-31
+> **Last reviewed:** 2026-10-28
 > **Working title:** Flashcard App  
 > **Required delivery platform:** Android development build  
 > **Institutional checkpoint — TCC I:** 2026-11-18
@@ -49,10 +49,10 @@ Build a free, local-first flashcard application for Android that uses FSRS v6 th
 
 The intended core experience is:
 
-1. Complete the onboarding flow.
+1. Answer an initial flashcard-app familiarity question, then complete a matching onboarding path or skip it.
 2. Import a deck from JSON.
 3. Select and open a deck from the local library.
-4. Review due cards and any new cards allowed by the configured limits.
+4. Review due cards first, with automatically suggested new cards and the option to study more new cards when available.
 5. Rate each answer as `Again`, `Hard`, `Good`, or `Easy`.
 6. Have each rating persisted immediately and see the deck and scheduling state updated.
 7. Return later and continue from the correctly persisted state.
@@ -74,7 +74,7 @@ The final academic work should connect the identified problem, the design and ar
 - Keep all required study functionality available offline.
 - Allow users to inspect relevant deck and scheduling information progressively.
 - Provide practical organization through the local deck library, tags, chip-based filters, and card flags.
-- Let users control desired retention, the maximum cards per session, and the daily number of new cards at deck level.
+- Let users control desired retention and a daily new-card reference per deck, plus a global daily goal whose round limit can be disabled for each session.
 - Make the Android experience simple, responsive, accessible, and consistent.
 - Keep essential functionality free and without paywalls.
 - Maintain a modular, independently testable technical core.
@@ -90,26 +90,30 @@ Phase 1 is the minimum result required for the project to be considered delivere
 
 It includes:
 
-- An onboarding flow.
+- Onboarding that starts with a familiarity question, offers three tailored paths, and can be skipped.
 - An Android development build designed for smartphones.
 - Local-first persistence and offline operation.
-- Atomic JSON deck import as the initial way to add study content: a deck is imported completely or the file is rejected.
+- Atomic JSON deck import as the initial way to add study content: a deck is imported completely or the file is rejected. Duplicate card content triggers a warning; a confirmed duplicate becomes an independent copy with a numbered display name. The app does not generate study content.
 - Text cards with a front and back as the baseline card type.
 - Listing, opening, and deleting decks from the local library.
-- Editing the deck name, desired retention, maximum cards per session, and daily number of new cards without editing the imported card content.
-- Adding tags to decks and filtering the home library through selectable tag chips; with no chip selected, all decks are shown.
-- One flag per card, with an optional editable note, which can be added during a review or individual card view and removed from the card itself.
+- Editing each deck's display name, desired retention, daily new-card reference, and tags without editing imported card content. Automatic new-card references track changes to the global goal; manually edited references retain their values.
+- Filtering the home library through selectable tag chips that require every selected tag; with no chip selected, all decks are shown.
+- One flag per card, with an optional editable note, which can be added, edited, or removed during review or individual card view.
 - Visualizing flagged cards inside their deck.
-- Starting a review from an open deck and prioritizing cards due for the current study day.
-- Adding new cards to the session when the due cards do not consume the configured session capacity, subject to the deck's daily new-card limit.
+- A global daily goal of distinct cards across all decks, initially 20 and configurable from 10 upward without a maximum; values above 50 prompt a nonblocking recommendation warning. The goal remains active when the user disables the round limit for a session.
+- Starting a review from an open deck, with the round limit enabled by default and a separate choice to disable it for each session.
+- Prioritizing due cards in the open deck. When the enabled limit leaves due cards out, optional due-only continuation remains available after reopening the deck on the same study day until that overflow is exhausted.
+- Suggesting new cards from the deck's adaptive daily reference after due cards, subject to remaining round capacity when the limit is enabled. The user may choose more available new cards outside the automatic suggestion.
 - The review ratings `Again`, `Hard`, `Good`, and `Easy`.
 - FSRS-based calculation of each card's next scheduling state.
 - Immediate persistence of every completed review before the next card is presented, including reviews made before a session is finished.
 - Preservation of progress after closing and reopening the application.
-- An undo action for the latest rating while the current review session remains active.
-- A neutral indication of how many cards are currently available in a deck. Its final presentation and whether the next-review date is also shown remain open requirements.
+- Sequential undo of confirmed ratings in reverse order across all rounds of the active review session, until no rating from that session remains to undo.
+- Minimal round-completion and daily-goal progress feedback; richer post-session feedback belongs to Phase 2.
+- A neutral available-card count on each visual deck card in the home library: due cards plus automatically suggested new cards. The library assumes the round limit is enabled and the suggestion is recalculated when the session starts. Whether to show a next-review date remains open.
 - Progressive display of relevant advanced FSRS information in a collapsed section after the main deck information.
 - A global, user-configurable study-day boundary with a default of 04:00 in the device's local time. A session that crosses the boundary remains associated with the study day on which it started.
+- A 200 ms card-flip animation when revealing the back during review.
 - Accessible interaction, clear error handling, and a simple, smooth, and intuitive UI/UX.
 
 ### Phase 2 — Desired TCC additions
@@ -127,7 +131,7 @@ It includes:
 - Visual customization, including interface colors and dark mode.
 - User-level analytics and study statistics.
 - Additional card types, including images, cloze deletion, and typed answers.
-- Study goals, reminders, and a local notification system whose triggers, frequency, content, and silent hours still require definition.
+- Additional study goals, reminders, and a local notification system whose triggers, frequency, content, and silent hours still require definition.
 - Richer post-session feedback.
 - Complete review history.
 - A possible PWA version and tablet adaptation if project capacity permits.
@@ -138,7 +142,7 @@ Phase 3 represents features that require development beyond the TCC horizon.
 
 It includes:
 
-- Creation and editing of decks and cards inside the application.
+- In-app authoring of decks and cards beyond the Phase 1 deck settings.
 - Login using OAuth 2.0 and OpenID Connect.
 - A backend for user profiles, public decks, and remote services.
 - Cloud backup and synchronization across devices.
@@ -155,14 +159,18 @@ It includes:
 - The expected development horizon is approximately twelve months. The TCC I institutional checkpoint is 2026-11-18; it covers the material required by that course and does not require the complete Phase 1 application.
 - The complete Phase 1 application, user validation, technical documentation, and monograph are targeted for the final TCC delivery in June 2027.
 - Phase 1 must be deliverable as an Android development build. A Play Store release is not required.
+- The application uses React Native with TypeScript and Expo. Native builds use cloud EAS Build, while compatible development binaries support local JavaScript/TypeScript iteration without a new native compilation for each change. [ADR 0006](adr/0006-android-application-with-react-native-and-expo.md) records the proposed platform design and the pending offline delivery-profile clarification.
 - Phase 1 targets Android smartphones. Tablet adaptation and a PWA are Phase 2 additions, not Phase 1 success conditions.
 - Every Phase 1 study workflow must function without an internet connection.
+- The selected local persistence technology for Android is SQLite through `expo-sqlite`; [ADR 0005](adr/0005-local-persistence-and-data-evolution.md) records the proposed persistence and data-evolution design. The domain remains independent of this integration.
+- Drizzle ORM is the preferred data-access tool, subject to validating asynchronous integration with `expo-sqlite`. [ADR 0007](adr/0007-drizzle-orm-for-local-data-access.md) records the proposal and pending compatibility checks; no package version or pre-release dependency has been adopted.
+- The selected interface approach uses Expo Router and React's built-in state facilities. [ADR 0008](adr/0008-ui-state-and-navigation.md) records the proposed navigation and presentation design while preserving application ownership of the active study session.
 - Phase 1 does not require accounts, authentication, a backend, cloud storage, or synchronization.
-- Phase 1 users import decks from JSON; creating cards or editing imported card content inside the application is deferred to Phase 3.
+- Phase 1 users import decks from JSON; the application does not generate study content. Creating decks or cards and editing imported card content inside the application are deferred to Phase 3.
 - Essential functionality must remain free and must not be placed behind paywalls.
 - A possible future subscription may only fund optional remote services such as synchronization or cloud storage.
 - Review scheduling uses FSRS v6 through `ts-fsrs`; developing a new spaced-repetition algorithm is not part of the project.
-- Desired retention is the only required user-editable FSRS parameter in Phase 1. The maximum cards per session and daily number of new cards are application policies rather than internal FSRS parameters.
+- Desired retention is the only required user-editable FSRS parameter in Phase 1. The global daily goal, optional per-session round limit, and deck-level new-card reference and adaptive suggestion are application policies rather than internal FSRS parameters.
 - The application must follow validated FSRS v6 scheduling outcomes and must not add a mandatory repeat-until-correct loop for cards rated `Again`.
 - The domain must remain independently testable and must not depend directly on React Native, Expo, SQLite, or device APIs.
 - The UI must access scheduling and persistence behavior through the application's public domain operations rather than calling `ts-fsrs` or storage directly.
@@ -176,13 +184,13 @@ The project will be considered successful when all required Phase 1 outcomes are
 | --- | --- |
 | Delivery | A stable Android development build can be installed and used to complete the required study workflow. |
 | Content entry | A valid JSON deck can be imported completely and used for study without creating content inside the app; a partial import is not accepted. |
-| Review flow | A user can review due cards and the new cards allowed by the accepted session rules, rating each one as `Again`, `Hard`, `Good`, or `Easy`. |
+| Review flow | A user can review due cards first, choose whether to apply the per-round limit for that session, study suggested or additional available new cards, and rate each one as `Again`, `Hard`, `Good`, or `Easy`. |
 | Scheduling | Every rating produces and preserves the appropriate next FSRS scheduling state. |
-| Data integrity | Each review is saved before the next card is presented, without partially updating the card, scheduling, or undo state, including when the user leaves before completing the session. |
-| Continuity | Closing and reopening the app preserves decks, reviews, flag notes, tags, deck and global settings, and scheduling progress. |
+| Data integrity | Each review is saved before the next card is presented, without partially updating the card, scheduling, daily counts, or undo state, including when the user leaves before completing the session. |
+| Continuity | Closing and reopening the app preserves decks, confirmed review progress, flag notes, tags, deck and global settings, and scheduling progress. Same-day due-only continuation remains available when due cards overflowed a limited round. |
 | Offline operation | All required Phase 1 workflows remain available without an internet connection. |
-| Organization | Users can use deck tags, filter the library through tag chips, and identify flagged cards inside a deck. |
-| Transparency | Users can see a neutral indication of available cards and progressively access relevant FSRS information without disrupting the basic flow. |
+| Organization | Users can use deck tags, filter the library by every selected tag, and identify flagged cards inside a deck. |
+| Transparency | Each home-library deck card shows a neutral count of due cards plus automatically suggested new cards, and users can progressively access relevant FSRS information without disrupting the basic flow. |
 | Study day | The application respects the global configurable study-day boundary and keeps a session that crosses it associated with its starting study day. |
 | Usability | Target users can complete predefined representative tasks within the limits established by the research protocol. |
 | Satisfaction | User satisfaction is measured and meets the threshold defined before the formal evaluation begins. |
@@ -201,7 +209,7 @@ The following items are explicitly outside the required TCC delivery:
 - Backend services.
 - Cloud backup and synchronization.
 - Public deck publishing and Discover.
-- In-app creation and editing of decks and cards.
+- In-app authoring of decks and cards beyond the Phase 1 deck settings.
 - A public deck marketplace or social network.
 - Collaboration between users.
 - iOS delivery.

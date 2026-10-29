@@ -1,7 +1,7 @@
 # Agent Instructions
 
 > **Scope:** This file applies to the entire repository.  
-> **Last reviewed:** 2026-08-31
+> **Last reviewed:** 2026-10-28
 
 ## Project objective
 
@@ -57,18 +57,22 @@ The expected initial implementation areas are `src/domain/` for domain code and 
 Prioritize only the required TCC scope defined in `docs/project-overview.md`, including:
 
 - Android development build.
-- Onboarding.
+- React Native with TypeScript and Expo for the Android application, with native builds generated through cloud EAS Build and compatible development binaries reused for local JavaScript/TypeScript iteration. See [ADR 0006](docs/adr/0006-android-application-with-react-native-and-expo.md), currently Proposed; its offline delivery-profile clarification is pending.
+- Onboarding that begins with a flashcard-app familiarity question, offers distinct paths for new, somewhat experienced, and confident users, and can be skipped.
 - Local-first persistence and offline operation.
-- Atomic JSON deck import: import the complete deck or reject the file.
-- Text cards with a front and back.
+- Atomic JSON deck import: import the complete deck or reject the file. Detect duplicate decks by card content independently of the file name or deck title; warn and allow cancellation or confirmation. A confirmed duplicate is a separate deck with an incrementing numeric display-name suffix, preserving existing study progress.
+- Text cards with a front and back; the app does not generate study content.
 - Deck listing, opening, and deletion from the local library.
-- Deck-level editing of name, desired retention, maximum cards per session, and daily number of new cards, without editing imported card content.
-- Deck tags and chip-based filtering; when no chip is selected, show all decks.
-- One flag per card with an optional editable note; add it during review or individual card view, remove it from the card itself, and show flagged cards inside their deck.
-- Reviews started from an open deck, prioritizing cards due for the current study day and filling remaining accepted capacity with new cards subject to the deck limits.
+- Deck-level editing of display name, desired retention, daily new-card reference, and tags, without editing imported card content. Changing the global goal recalculates automatically linked new-card references; manually edited references and their adaptive values remain unchanged.
+- Deck tags and chip-based filtering using AND across selected tags; when no chip is selected, show all decks.
+- One flag per card with an optional editable note; add, edit, or remove it during review or individual card view, and show flagged cards inside their deck.
+- A global daily goal of distinct cards across all decks, initially 20, configurable from 10 upward with no maximum and a nonblocking recommendation warning above 50.
+- Reviews started from an open deck, with the round limit enabled by default and a separate choice to disable it for each session. When enabled, the global goal is the capacity of each round; when disabled, it remains the daily goal without capping the round.
+- Due cards before new cards, an adaptive automatic new-card suggestion, and voluntary extra new cards. Due cards left out by an enabled round limit lead to optional due-only continuation, including after reopening the deck on the same study day until the overflow is exhausted.
 - Review ratings using `Again`, `Hard`, `Good`, and `Easy`.
-- FSRS scheduling, persistence of each rating before advancing to the next card, and undo of only the latest rating while the current session remains active.
-- A neutral indication of currently available cards, with its final presentation and possible next-review date left open until the specification resolves them.
+- FSRS scheduling, persistence of each rating before advancing to the next card, and sequential undo of confirmed ratings in reverse order across all rounds of the active session, until no rating from that session remains to undo.
+- Minimal round-completion and daily-goal progress feedback; detailed post-session feedback is Phase 2.
+- A neutral count on each visual deck card in the home library: due cards plus automatically suggested new cards. Before a session, calculate it with the round limit enabled; recalculate the suggestion when the session starts. Whether to show a next-review date remains open.
 - Progressively disclosed advanced FSRS information in a collapsed section after the main deck information.
 - A global configurable study-day boundary, defaulting to 04:00 in the device's local time, with active sessions retaining their starting study day.
 - A 200 ms card-flip animation in the UI; treat this as motion duration, not as a general response-time target.
@@ -85,7 +89,7 @@ Do not implement Phase 2 work opportunistically. It may begin only when the user
 - Interface colors, dark mode, and other visual customization.
 - Analytics, study statistics, and complete review history.
 - Image, cloze-deletion, and typed-answer cards.
-- Study goals, reminders, and local notifications.
+- Additional study goals, reminders, and local notifications.
 - Richer post-session feedback.
 - PWA delivery and tablet adaptation.
 
@@ -99,18 +103,17 @@ Do not implement or prepare speculative infrastructure for:
 - Background synchronization.
 - Discover or public deck publishing.
 - Server-side relevance ordering and remote security or privacy behavior.
-- In-app deck or card authoring.
+- In-app deck or card authoring beyond the accepted Phase 1 deck settings.
 - Social, collaborative, generative-AI, or advanced-gamification features.
 
 Phase 3 possibilities are not current requirements and do not justify abstractions, dependencies, schemas, or extension points today.
 
 ### Open requirement guardrails
 
-Always re-read the current statuses in `docs/system-specification.md`. At this revision, agents must not choose final behavior for:
+Always re-read the current statuses in `docs/system-specification.md`. At this revision, agents must not choose the following unresolved details:
 
-- `RF-026`: presentation and location of the available-card count, including whether to show a next-review date.
-- `RN-008`: behavior when due cards exceed the configured session limit.
-- `RN-009`: whether the session limit can be disabled.
+- `RF-026`: whether to show a next-review date in the advanced deck area. The home-library count and its location are already defined.
+- `RN-001`: the exact JSON deck schema and public import format have not been finalized; retain atomic whole-deck validation without inventing the schema.
 - `RNF-010`: the measurable usability threshold for the research protocol.
 - `RNF-011`: the measurable satisfaction threshold for the research protocol.
 - `RF-041`: notification triggers, frequency, content, silent hours, and deck relationships.
@@ -127,6 +130,7 @@ Do not encode an unresolved option as a default, UI promise, persisted field, te
 - The domain must not import React Native, Expo, SQLite, UI frameworks, hooks, navigation, filesystem APIs, or device APIs.
 - UI code must call public application/domain operations. It must not contain scheduling or persistence business rules.
 - UI code must not call `ts-fsrs` or SQLite directly.
+- The user selected Expo Router and React's built-in state facilities for the interface. [ADR 0008](docs/adr/0008-ui-state-and-navigation.md), currently Proposed, records the surrounding design. Keep live session ownership outside individual screens and hooks; do not add a global state library without a demonstrated need and approval.
 - Persistence implementations must connect through explicit boundaries and must not dictate the domain model.
 - Infrastructure-specific and library-specific objects must not leak through the public domain API.
 
@@ -138,7 +142,8 @@ Do not encode an unresolved option as a default, UI promise, persisted field, te
 - Preserve the accepted user-language mapping: `Errei` to `Again`, `Difícil` to `Hard`, `Bom` to `Good`, and `Fácil` to `Easy`.
 - Preserve every scheduling field required to calculate a later review correctly, but do not expose fields merely because the library returns them.
 - Desired retention is the only required user-editable FSRS parameter in Phase 1 unless the specification is explicitly changed.
-- Maximum cards per session and daily new-card limits are application policies, not editable FSRS parameters. Do not use them to justify exposing deeper library configuration.
+- The global daily goal, optional per-session round limit, and deck-level new-card reference and adaptive suggestion are application policies, not editable FSRS parameters. Do not use them to justify exposing deeper library configuration.
+- Follow the accepted adaptive suggestion in RN-020 and UC08. Its future-schedule snapshot includes only the current deck; do not substitute a forecast across all decks.
 - Advanced FSRS values may be presented progressively, but agents must not add deep parameter editing or automatic optimization without approval.
 - Follow validated FSRS v6 scheduling outcomes. Do not force a card rated `Again` to repeat until the user answers it correctly.
 - Do not replace, modify, or reimplement the FSRS algorithm.
@@ -154,11 +159,13 @@ Do not encode an unresolved option as a default, UI promise, persisted field, te
 
 ### Local-first data integrity
 
+- The user has selected SQLite through `expo-sqlite` for the Android application's required local persistence. The surrounding design is recorded in [ADR 0005](docs/adr/0005-local-persistence-and-data-evolution.md), currently Proposed. Keep the current domain exploration independent of this driver; concrete schemas, migrations, and implementation still require their respective design and authorization.
+- Drizzle ORM is the user's preferred data-access tool, conditional on validating asynchronous execution with `expo-sqlite`. [ADR 0007](docs/adr/0007-drizzle-orm-for-local-data-access.md), currently Proposed, records this condition. Retain ADR 0005's asynchronous requirement; do not silently substitute the synchronous adapter or adopt a pre-release dependency. ORM types and queries remain inside infrastructure.
 - All required Phase 1 study behavior must work without a network connection.
 - JSON import must validate and persist the complete deck atomically. Do not retain a partially imported deck.
 - A completed review must be persisted before the next card is presented; finishing the entire session must not be required.
-- Review persistence must not leave the card state, scheduling state, and undo information partially updated.
-- Closing and reopening the app must preserve decks, scheduling progress, tags, flags and their notes, deck settings, global settings, and the other state required by Phase 1.
+- Review persistence must not leave the card state, scheduling state, daily counts, and undo information partially updated.
+- Closing and reopening the app must preserve decks, scheduling progress, tags, flags and their notes, deck settings, the global goal and study-day boundary, automatic or manual reference behavior, adaptive values, and same-day due-only continuation when due cards overflowed a limited round.
 - Deck deletion must remove its associated local data through the accepted deletion operation. Do not invent an archive or recovery feature unless the specification changes.
 - Complete review history is a Phase 2 feature. In Phase 1, retain only the information required by current use cases, scheduling correctness, immediate persistence, and undo.
 - Exact schemas, transaction boundaries, and migrations require documentation and approval before becoming architectural commitments.
@@ -210,11 +217,15 @@ Tooling is intentionally not fixed by this document.
 - Use deterministic dates and independent starting state for comparisons between ratings.
 - At minimum, scheduling behavior must eventually cover `Again`, `Hard`, `Good`, and `Easy`.
 - Test domain behavior without starting React Native, Expo, Android, or SQLite.
-- When import is introduced, test complete success, invalid-file rejection, and prevention of partial deck persistence.
-- When session selection is introduced, test due-card priority, accepted new-card limits, and the final overflow behavior after the open requirements are resolved.
+- When import is introduced, test complete success, unreadable- and invalid-file rejection, and prevention of partial deck persistence.
+- When session selection is introduced, test due-card priority, automatic new-card suggestions, voluntary extra new cards, the per-session limit enabled and disabled, and due-only overflow continuation after a same-day reopen.
+- When deck settings are introduced, test that a global-goal change recalculates automatically linked new-card references and preserves manually edited references and adaptive values.
+- When the adaptive suggestion is introduced, test its once-per-study-day adjustment, its current-deck future-schedule snapshot, and that a day without a confirmed rating does not enter study history.
+- When the global goal is introduced, test its initial value, minimum, nonblocking warning above 50, and persistence. Validate the warning at the UI level.
+- When tag filtering is introduced, test AND across selected chips and the all-decks state when no chip is selected.
 - Test the 04:00 study-day boundary on both sides and a session that crosses it.
 - When flags are introduced, test addition, optional-note editing, removal, and persistence.
-- When persistence is introduced, test interruption and restart behavior, saving before the next card is presented, and undo consistency.
+- When persistence is introduced, test interruption and restart behavior, saving before the next card is presented, and sequential undo consistency across rounds, including repeated ratings of the same card and counts supported by other ratings. Backgrounding must preserve the session's undo sequence; a new session must not expose the previous session's undo sequence.
 - Validate the 200 ms card flip at the UI level rather than as a domain timing rule.
 - When fixing a reproducible bug, add a focused regression test if a test harness exists.
 - Long-running temporal simulations remain deferred unless explicitly requested.
