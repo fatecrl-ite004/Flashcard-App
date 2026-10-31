@@ -1,0 +1,540 @@
+{
+  "version": "1.1.0",
+  "review_type": "Logical design graph, not implemented navigation",
+  "nodes": [
+    {
+      "id": "T00",
+      "name": "Inicialização",
+      "kind": "State"
+    },
+    {
+      "id": "T01",
+      "name": "Familiaridade",
+      "kind": "Screen"
+    },
+    {
+      "id": "T02",
+      "name": "Demonstração por nível",
+      "kind": "Screen states"
+    },
+    {
+      "id": "T03",
+      "name": "Biblioteca",
+      "kind": "Root screen"
+    },
+    {
+      "id": "T04",
+      "name": "Importar JSON",
+      "kind": "Native boundary and states"
+    },
+    {
+      "id": "T05",
+      "name": "Deck e lista de cards",
+      "kind": "Screen family"
+    },
+    {
+      "id": "T06",
+      "name": "Configurações do deck",
+      "kind": "Screen"
+    },
+    {
+      "id": "T07",
+      "name": "Excluir deck",
+      "kind": "Dialog"
+    },
+    {
+      "id": "T08",
+      "name": "Card individual",
+      "kind": "Screen"
+    },
+    {
+      "id": "T09",
+      "name": "Flag e nota",
+      "kind": "Overlay/editor"
+    },
+    {
+      "id": "T10",
+      "name": "Preferências essenciais",
+      "kind": "Screen"
+    },
+    {
+      "id": "T11",
+      "name": "Preparar estudo",
+      "kind": "Screen or sheet"
+    },
+    {
+      "id": "T12",
+      "name": "Revisão",
+      "kind": "Screen states"
+    },
+    {
+      "id": "T13",
+      "name": "Sessão concluída",
+      "kind": "Screen"
+    },
+    {
+      "id": "T14",
+      "name": "Perfil e preferências",
+      "kind": "Navigation hub"
+    },
+    {
+      "id": "T15",
+      "name": "Confirmar nível",
+      "kind": "Dialog"
+    },
+    {
+      "id": "T16",
+      "name": "Confirmar pular",
+      "kind": "Dialog"
+    },
+    {
+      "id": "T17",
+      "name": "Selecionar ou criar tags",
+      "kind": "Sheet/editor"
+    },
+    {
+      "id": "T18",
+      "name": "Saiba mais",
+      "kind": "Shared overlay"
+    },
+    {
+      "id": "T19",
+      "name": "Interromper demonstração",
+      "kind": "Dialog"
+    }
+  ],
+  "edges": [
+    {
+      "from": "T00",
+      "to": "T01",
+      "trigger": "Incomplete onboarding",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T00",
+      "to": "T03",
+      "trigger": "Confirmed prior completion",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T01",
+      "to": "T15",
+      "trigger": "Select level",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T01",
+      "to": "T16",
+      "trigger": "Skip",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T15",
+      "to": "T01",
+      "trigger": "Revise level",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T15",
+      "to": "T02",
+      "trigger": "Confirm level",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T02",
+      "to": "T03",
+      "trigger": "Completion save confirmed",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T02",
+      "to": "T16",
+      "trigger": "Skip",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T02",
+      "to": "T19",
+      "trigger": "Back interruption",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T16",
+      "to": "T01",
+      "trigger": "Cancel when question was origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T16",
+      "to": "T02",
+      "trigger": "Cancel when demonstration was origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T16",
+      "to": "T03",
+      "trigger": "Skip save confirmed",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T19",
+      "to": "T02",
+      "trigger": "Continue demonstration",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T19",
+      "to": "T00",
+      "trigger": "Exit incomplete then relaunch",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T03",
+      "to": "T04",
+      "trigger": "Import",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T03",
+      "to": "T05",
+      "trigger": "Open deck",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T03",
+      "to": "T14",
+      "trigger": "Avatar",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T04",
+      "to": "T03",
+      "trigger": "Cancel or completed import",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T05",
+      "to": "T03",
+      "trigger": "Back",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T05",
+      "to": "T06",
+      "trigger": "Settings",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T05",
+      "to": "T07",
+      "trigger": "Delete",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T05",
+      "to": "T08",
+      "trigger": "Open card",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T05",
+      "to": "T11",
+      "trigger": "Study",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T06",
+      "to": "T05",
+      "trigger": "Back",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T06",
+      "to": "T17",
+      "trigger": "Tags",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T17",
+      "to": "T06",
+      "trigger": "Close selector",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T07",
+      "to": "T05",
+      "trigger": "Cancel or confirmed failure",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T07",
+      "to": "T03",
+      "trigger": "Confirmed deletion success",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T08",
+      "to": "T05",
+      "trigger": "Back",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T08",
+      "to": "T09",
+      "trigger": "Flag",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T09",
+      "to": "T08",
+      "trigger": "Return to individual origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T09",
+      "to": "T12",
+      "trigger": "Return to review origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T14",
+      "to": "T03",
+      "trigger": "Back",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T14",
+      "to": "T10",
+      "trigger": "Essential settings",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T10",
+      "to": "T14",
+      "trigger": "Back",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T11",
+      "to": "T05",
+      "trigger": "Back/no study",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T11",
+      "to": "T12",
+      "trigger": "Prepared session",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T12",
+      "to": "T05",
+      "trigger": "Early exit",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T12",
+      "to": "T09",
+      "trigger": "Flag",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T12",
+      "to": "T13",
+      "trigger": "Final eligible rating confirmed and session closed",
+      "session_effect": "end"
+    },
+    {
+      "from": "T13",
+      "to": "T05",
+      "trigger": "Back to deck",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T13",
+      "to": "T03",
+      "trigger": "Library",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T13",
+      "to": "T11",
+      "trigger": "Estudar mais: NEW session preparation",
+      "session_effect": "new"
+    },
+    {
+      "from": "T00",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T00",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T02",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T02",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T03",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T03",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T04",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T04",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T05",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T05",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T06",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T06",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T07",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T07",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T08",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T08",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T09",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T09",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T10",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T10",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T11",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T11",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T12",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T12",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T16",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T16",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T17",
+      "to": "T18",
+      "trigger": "Known error details",
+      "session_effect": "preserve_or_not_applicable"
+    },
+    {
+      "from": "T18",
+      "to": "T17",
+      "trigger": "Return to recorded origin",
+      "session_effect": "preserve_or_not_applicable"
+    }
+  ],
+  "context_rules": [
+    "T09 and T18 return only to their recorded origin, not any listed possible origin.",
+    "T13 has no active-session Undo and cannot return directly to T12.",
+    "T11 entered from T13 creates a new session, never revives the completed one.",
+    "Native picker and Android exit are boundaries rather than extra custom screens."
+  ]
+}

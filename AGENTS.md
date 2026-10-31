@@ -1,7 +1,7 @@
 # Agent Instructions
 
 > **Scope:** This file applies to the entire repository.  
-> **Last reviewed:** 2026-10-28
+> **Last reviewed:** 2026-10-31
 
 ## Project objective
 
@@ -58,22 +58,22 @@ Prioritize only the required TCC scope defined in `docs/project-overview.md`, in
 
 - Android development build.
 - React Native with TypeScript and Expo for the Android application, with native builds generated through cloud EAS Build and compatible development binaries reused for local JavaScript/TypeScript iteration. See [ADR 0006](docs/adr/0006-android-application-with-react-native-and-expo.md), currently Proposed; its offline delivery-profile clarification is pending.
-- Onboarding that begins with a flashcard-app familiarity question, offers distinct paths for new, somewhat experienced, and confident users, and can be skipped.
+- Onboarding with level confirmation, three isolated-example demonstration paths, forward-only steps, friendly skip confirmation, and a distinct Android Back interruption confirmation. Only confirmed completion/skip opens the library; interruption restarts from the familiarity question.
 - Local-first persistence and offline operation.
 - Atomic JSON deck import: import the complete deck or reject the file. Detect duplicate decks by card content independently of the file name or deck title; warn and allow cancellation or confirmation. A confirmed duplicate is a separate deck with an incrementing numeric display-name suffix, preserving existing study progress.
 - Text cards with a front and back; the app does not generate study content.
 - Deck listing, opening, and deletion from the local library.
-- Deck-level editing of display name, desired retention, daily new-card reference, and tags, without editing imported card content. Changing the global goal recalculates automatically linked new-card references; manually edited references and their adaptive values remain unchanged.
+- Deck-level autosave editing of display name (maximum 50 characters), description (maximum 500), desired retention, daily new-card reference, and tags, including tag creation (maximum 30; no blank label; reuse an existing name), without editing imported card content. Changing the global goal recalculates automatically linked new-card references; manually edited references and their adaptive values remain unchanged.
 - Deck tags and chip-based filtering using AND across selected tags; when no chip is selected, show all decks.
 - One flag per card with an optional editable note; add, edit, or remove it during review or individual card view, and show flagged cards inside their deck.
 - A global daily goal of distinct cards across all decks, initially 20, configurable from 10 upward with no maximum and a nonblocking recommendation warning above 50.
 - Reviews started from an open deck, with the round limit enabled by default and a separate choice to disable it for each session. When enabled, the global goal is the capacity of each round; when disabled, it remains the daily goal without capping the round.
 - Due cards before new cards, an adaptive automatic new-card suggestion, and voluntary extra new cards. Due cards left out by an enabled round limit lead to optional due-only continuation, including after reopening the deck on the same study day until the overflow is exhausted.
 - Review ratings using `Again`, `Hard`, `Good`, and `Easy`.
-- FSRS scheduling, persistence of each rating before advancing to the next card, and sequential undo of confirmed ratings in reverse order across all rounds of the active session, until no rating from that session remains to undo.
-- Minimal round-completion and daily-goal progress feedback; detailed post-session feedback is Phase 2.
-- A neutral count on each visual deck card in the home library: due cards plus automatically suggested new cards. Before a session, calculate it with the round limit enabled; recalculate the suggestion when the session starts. Whether to show a next-review date remains open.
-- Progressively disclosed advanced FSRS information in a collapsed section after the main deck information.
+- FSRS scheduling, persistence before advancement, and sequential Undo within the active session. The final confirmed eligible rating ends the session and Undo before the summary. Estudar mais starts a new session; completed sessions do not share Undo.
+- A four-block current-session summary (distinct cards, new cards, rating counts, global daily-goal progress) with contextual messages. Historical analytics and expanded reports remain Phase 2.
+- A neutral count on each visual deck card in the home library: due cards plus automatically suggested new cards. Before a session, calculate it with the round limit enabled; recalculate the suggestion when the session starts. Do not show a next-review date in Phase 1.
+- A single library root with avatar access to essential preferences and no bottom tab bar. The separate advanced FSRS area is discarded (RF-027).
 - A global configurable study-day boundary, defaulting to 04:00 in the device's local time, with active sessions retaining their starting study day.
 - A 200 ms card-flip animation in the UI; treat this as motion duration, not as a general response-time target.
 - Accessible, understandable, and reliable UI/UX.
@@ -112,7 +112,6 @@ Phase 3 possibilities are not current requirements and do not justify abstractio
 
 Always re-read the current statuses in `docs/system-specification.md`. At this revision, agents must not choose the following unresolved details:
 
-- `RF-026`: whether to show a next-review date in the advanced deck area. The home-library count and its location are already defined.
 - `RN-001`: the exact JSON deck schema and public import format have not been finalized; retain atomic whole-deck validation without inventing the schema.
 - `RNF-010`: the measurable usability threshold for the research protocol.
 - `RNF-011`: the measurable satisfaction threshold for the research protocol.
@@ -144,7 +143,7 @@ Do not encode an unresolved option as a default, UI promise, persisted field, te
 - Desired retention is the only required user-editable FSRS parameter in Phase 1 unless the specification is explicitly changed.
 - The global daily goal, optional per-session round limit, and deck-level new-card reference and adaptive suggestion are application policies, not editable FSRS parameters. Do not use them to justify exposing deeper library configuration.
 - Follow the accepted adaptive suggestion in RN-020 and UC08. Its future-schedule snapshot includes only the current deck; do not substitute a forecast across all decks.
-- Advanced FSRS values may be presented progressively, but agents must not add deep parameter editing or automatic optimization without approval.
+- Do not reintroduce the discarded advanced FSRS area or next-review date. Desired retention remains the accepted editable FSRS parameter; do not add deep parameter editing or automatic optimization without approval.
 - Follow validated FSRS v6 scheduling outcomes. Do not force a card rated `Again` to repeat until the user answers it correctly.
 - Do not replace, modify, or reimplement the FSRS algorithm.
 
@@ -225,7 +224,7 @@ Tooling is intentionally not fixed by this document.
 - When tag filtering is introduced, test AND across selected chips and the all-decks state when no chip is selected.
 - Test the 04:00 study-day boundary on both sides and a session that crosses it.
 - When flags are introduced, test addition, optional-note editing, removal, and persistence.
-- When persistence is introduced, test interruption and restart behavior, saving before the next card is presented, and sequential undo consistency across rounds, including repeated ratings of the same card and counts supported by other ratings. Backgrounding must preserve the session's undo sequence; a new session must not expose the previous session's undo sequence.
+- When persistence is introduced, test interruption and restart behavior, saving before the next card is presented, and sequential undo consistency within the active session and unavailability on its completed summary, including repeated ratings of the same card and counts supported by other ratings. Backgrounding must preserve the session's undo sequence; a new session must not expose the previous session's undo sequence.
 - Validate the 200 ms card flip at the UI level rather than as a domain timing rule.
 - When fixing a reproducible bug, add a focused regression test if a test harness exists.
 - Long-running temporal simulations remain deferred unless explicitly requested.

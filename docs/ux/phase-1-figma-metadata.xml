@@ -1,0 +1,36 @@
+<canvas id="3:121" name="01 — Fase 1 · Android" x="0" y="0" width="0" height="0">
+  <section id="4:2" name="Navegação da Fase 1" x="120" y="120" width="1600" height="1115" />
+  <section id="4:3" name="Primeiro uso" x="1900" y="120" width="1600" height="1115">
+    <frame id="4:4" name="Boas-vindas" x="100" y="100" width="412" height="915" />
+    <frame id="4:5" name="Orientação inicial" x="592" y="100" width="412" height="915" />
+  </section>
+  <section id="4:6" name="Importação JSON" x="120" y="1415" width="1600" height="1115">
+    <frame id="4:7" name="Selecionar arquivo" x="100" y="100" width="412" height="915" />
+    <frame id="4:8" name="Importação concluída" x="592" y="100" width="412" height="915" />
+    <frame id="4:9" name="Erro de importação" x="1084" y="100" width="412" height="915" />
+  </section>
+  <section id="4:10" name="Biblioteca" x="1900" y="1415" width="1600" height="1115">
+    <frame id="4:11" name="Biblioteca vazia" x="100" y="100" width="412" height="915" />
+    <frame id="4:12" name="Biblioteca com decks" x="592" y="100" width="412" height="915" />
+    <frame id="4:13" name="Filtro por tags" x="1084" y="100" width="412" height="915" />
+  </section>
+  <section id="4:14" name="Deck" x="120" y="2710" width="1600" height="1115">
+    <frame id="4:15" name="Detalhes do deck" x="100" y="100" width="412" height="915" />
+    <frame id="4:16" name="Editar deck" x="592" y="100" width="412" height="915" />
+    <frame id="4:17" name="Confirmar exclusão" x="1084" y="100" width="412" height="915" />
+  </section>
+  <section id="4:18" name="Cartões e flags" x="1900" y="2710" width="1600" height="1115">
+    <frame id="4:19" name="Lista de cartões" x="100" y="100" width="412" height="915" />
+    <frame id="4:20" name="Cartão individual" x="592" y="100" width="412" height="915" />
+    <frame id="4:21" name="Flag do cartão" x="1084" y="100" width="412" height="915" />
+  </section>
+  <section id="4:22" name="Revisão" x="120" y="4005" width="1600" height="2110">
+    <frame id="4:23" name="Frente do cartão" x="100" y="100" width="412" height="915" />
+    <frame id="4:24" name="Verso do cartão" x="592" y="100" width="412" height="915" />
+    <frame id="4:25" name="Avaliar cartão" x="1084" y="100" width="412" height="915" />
+    <frame id="4:26" name="Sessão concluída" x="100" y="1095" width="412" height="915" />
+  </section>
+  <section id="4:27" name="Ajustes essenciais" x="1900" y="4005" width="1600" height="1115">
+    <frame id="4:28" name="Início do dia de estudo" x="100" y="100" width="412" height="915" />
+  </section>
+</canvas>

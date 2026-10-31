@@ -5,12 +5,13 @@
 - **Date:** 2026-10-28
 - **Owner:** Enzo
 - **Status:** Proposed
+- **Product-contract revision:** 2026-10-31. Sequential Undo remains available during the active session, which now ends before its summary. The owner replaced continuation within that session with new-session further study; architecture remains Proposed.
 
 ## Context
 
 Flashcard App must save each confirmed rating before presenting the next card. A rating changes scheduling state and can affect daily distinct-card counts, the deck's first-study count, and the demand information used by its adaptive suggestion. An interrupted write must not leave these effects inconsistent.
 
-The user has confirmed that undo must support successive reversals throughout the active session. Each action reverses the most recent remaining confirmed rating, including ratings from earlier rounds, until the session's sequence is exhausted. Backgrounding while the process survives preserves this sequence. Ending the session ends its undo scope, as established by UC08 and ADR 0003.
+The user has confirmed that undo must support successive reversals throughout the active session. Each action reverses the most recent remaining confirmed rating, until the active session's sequence is exhausted. The final eligible confirmed rating ends that session before its summary; further study creates a new session and Undo scope. Backgrounding while the process survives preserves this sequence. Ending the session ends its undo scope, as established by UC08 and ADR 0003.
 
 A single previous-state record is insufficient for this behavior. Repeated ratings of the same card also require care: undoing a later rating must not remove a daily count still supported by an earlier confirmed rating. A storage operation may complete even when the application does not receive its confirmation, so both rating and undo require a way to reconcile an uncertain result before retrying.
 
@@ -22,7 +23,7 @@ Treat each rating and each undo as a complete, recoverable persistence operation
 
 1. **Commit a rating and its required effects together.** The application obtains the confirmed card state, validates the explicit review instant, and invokes the domain calculation. Persistence must atomically record the rating's resulting scheduling state, daily-count effects, any study-day demand effects required by RN-020 and RN-021, and the information needed to reverse that rating. Evidence needed to recognize the operation's persisted outcome must be consistent with those effects. The application advances the queue and confirms progress only after a successful persisted outcome is known.
 
-2. **Order undo by confirmed operation sequence.** Every newly confirmed rating becomes the most recent target in its session. Each successful undo exposes the preceding remaining rating as the next target. Use the session's confirmed operation order, rather than sorting review timestamps, to determine this sequence. It spans all rounds and is not reset at round completion. There is no single-rating undo cap: every remaining confirmed rating from the active session must be reachable through successive undo actions.
+2. **Order undo by confirmed operation sequence.** Every newly confirmed rating becomes the most recent target in its session. Each successful undo exposes the preceding remaining rating as the next target. Use the session's confirmed operation order, rather than sorting review timestamps, to determine this sequence. Its scope ends when the final eligible confirmed rating closes the session before the summary. There is no single-rating undo cap: every remaining confirmed rating from the active session must be reachable through successive undo actions.
 
 3. **Retain exact prior scheduling state and reversal context.** Each rating's undo information must be sufficient to restore that card's immediately preceding scheduling state, the corresponding round and queue context, and its attributable daily-count and study-history effects. Restore the saved prior scheduling values rather than calculating a different FSRS result to approximate undo. The integration still preserves all library scheduling fields needed for correct later reviews through project-owned representations, as required by ADR 0001. Exact storage and in-memory structures remain to be designed.
 
@@ -36,7 +37,7 @@ Treat each rating and each undo as a complete, recoverable persistence operation
 
 8. **Preserve unrelated changes.** Undo reverses a rating's scheduling, count, study-history, and queue effects. It does not restore an old whole-card or whole-application snapshot that would erase later flag-note edits, deck settings, tags, or other changes outside that rating. Global counts must retain contributions unrelated to the reversal. Undo also retains the original rating's study-day attribution even if the active session has crossed a boundary.
 
-9. **Keep recovery information distinct from later-session undo access.** Preserve the complete remaining undo sequence while the session is active, including across rounds and background returns. Once the session ends, a new session cannot use that sequence to reverse previous ratings. Retain whatever evidence is still needed to reconcile interrupted operations before cleaning up temporary recovery data. Information retained for these operations does not introduce the complete, user-queryable review history assigned to Phase 2.
+9. **Keep recovery information distinct from later-session undo access.** Preserve the complete remaining undo sequence while the session is active, including background returns while that session remains active. Once the session ends, a new session cannot use that sequence to reverse previous ratings. Retain whatever evidence is still needed to reconcile interrupted operations before cleaning up temporary recovery data. Information retained for these operations does not introduce the complete, user-queryable review history assigned to Phase 2.
 
 For example, if one card is rated twice in the session, it contributes once to that day's distinct-card count. Undoing its second rating restores the state after its first rating and keeps that contribution. Undoing its first rating then removes the contribution only if no other confirmed rating on that study date still supports it. Each reversal must be confirmed before the next one is offered.
 
@@ -65,7 +66,7 @@ For example, if one card is rated twice in the session, it contributes once to t
 - Application use cases need explicit pending, confirmed, and failed or uncertain outcomes for both rating and undo. The public API and module organization still require design.
 - A recovered persisted result must update the live state once. Reconciliation must not make an ended session's undo sequence available to a newly started session.
 - The persistence design must preserve enough information to distinguish counts supported by the current target from those supported by other ratings. Restoring a prior global counter blindly is insufficient.
-- Required validation includes successive undo to the start of a session; undo across round boundaries; repeated ratings of one card; counts supported by previous sessions; background return with the remaining sequence intact; a new rating after undo; unrelated flag-note edits; interruption before and after commit; uncertain rating and undo confirmations; and failure without partial reversal or sequence advancement.
+- Required validation includes successive undo to the start of a session; no Undo from the completed-session summary or across subsequent sessions; repeated ratings of one card; counts supported by previous sessions; background return with the remaining sequence intact; a new rating after undo; unrelated flag-note edits; interruption before and after commit; uncertain rating and undo confirmations; and failure without partial reversal or sequence advancement.
 - This ADR records a proposed consistency design and the approved sequential-undo behavior. No runtime behavior or storage guarantee is verified until implementation and corresponding validation evidence exist.
 
 ## References

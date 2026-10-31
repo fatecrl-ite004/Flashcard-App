@@ -1,7 +1,7 @@
 # Project Overview
 
 > **Status:** Active  
-> **Last reviewed:** 2026-10-28
+> **Last reviewed:** 2026-10-31
 > **Working title:** Flashcard App  
 > **Required delivery platform:** Android development build  
 > **Institutional checkpoint — TCC I:** 2026-11-18
@@ -90,13 +90,13 @@ Phase 1 is the minimum result required for the project to be considered delivere
 
 It includes:
 
-- Onboarding that starts with a familiarity question, offers three tailored paths, and can be skipped.
+- Onboarding with three familiarity-based, isolated example paths, level confirmation, a forward-only demonstration, and friendly skip confirmation. Completion is stored before entering the library; interrupted onboarding restarts.
 - An Android development build designed for smartphones.
 - Local-first persistence and offline operation.
 - Atomic JSON deck import as the initial way to add study content: a deck is imported completely or the file is rejected. Duplicate card content triggers a warning; a confirmed duplicate becomes an independent copy with a numbered display name. The app does not generate study content.
 - Text cards with a front and back as the baseline card type.
-- Listing, opening, and deleting decks from the local library.
-- Editing each deck's display name, desired retention, daily new-card reference, and tags without editing imported card content. Automatic new-card references track changes to the global goal; manually edited references retain their values.
+- One library root for listing, opening, and deleting decks, with preferences reached through its avatar and no bottom tab bar.
+- Editing each deck's display name, description, desired retention, daily new-card reference, and tags without editing imported card content. Deck and global study settings save automatically; free-text name and description save when leaving their fields. Automatic new-card references track changes to the global goal; manually edited references retain their values.
 - Filtering the home library through selectable tag chips that require every selected tag; with no chip selected, all decks are shown.
 - One flag per card, with an optional editable note, which can be added, edited, or removed during review or individual card view.
 - Visualizing flagged cards inside their deck.
@@ -108,10 +108,10 @@ It includes:
 - FSRS-based calculation of each card's next scheduling state.
 - Immediate persistence of every completed review before the next card is presented, including reviews made before a session is finished.
 - Preservation of progress after closing and reopening the application.
-- Sequential undo of confirmed ratings in reverse order across all rounds of the active review session, until no rating from that session remains to undo.
-- Minimal round-completion and daily-goal progress feedback; richer post-session feedback belongs to Phase 2.
-- A neutral available-card count on each visual deck card in the home library: due cards plus automatically suggested new cards. The library assumes the round limit is enabled and the suggestion is recalculated when the session starts. Whether to show a next-review date remains open.
-- Progressive display of relevant advanced FSRS information in a collapsed section after the main deck information.
+- Sequential undo of confirmed ratings while the current session is active. The final eligible confirmed rating ends the session and Undo before showing its summary; further study starts a new session.
+- A compact completed-session summary: distinct cards, new cards, rating-category counts, and global daily-goal progress, with varied contextual messages. Expanded historical feedback remains Phase 2.
+- A neutral available-card count on each visual deck card in the home library: due cards plus automatically suggested new cards. The library assumes the round limit is enabled and the suggestion is recalculated when the session starts. No next-review date is shown in Phase 1.
+- Essential deck information without a separate advanced FSRS section.
 - A global, user-configurable study-day boundary with a default of 04:00 in the device's local time. A session that crosses the boundary remains associated with the study day on which it started.
 - A 200 ms card-flip animation when revealing the back during review.
 - Accessible interaction, clear error handling, and a simple, smooth, and intuitive UI/UX.
@@ -190,7 +190,7 @@ The project will be considered successful when all required Phase 1 outcomes are
 | Continuity | Closing and reopening the app preserves decks, confirmed review progress, flag notes, tags, deck and global settings, and scheduling progress. Same-day due-only continuation remains available when due cards overflowed a limited round. |
 | Offline operation | All required Phase 1 workflows remain available without an internet connection. |
 | Organization | Users can use deck tags, filter the library by every selected tag, and identify flagged cards inside a deck. |
-| Transparency | Each home-library deck card shows a neutral count of due cards plus automatically suggested new cards, and users can progressively access relevant FSRS information without disrupting the basic flow. |
+| Transparency | Each home-library deck card shows a neutral available-card count; the completed-session summary and understandable settings explain study outcomes without a separate advanced FSRS area. |
 | Study day | The application respects the global configurable study-day boundary and keeps a session that crosses it associated with its starting study day. |
 | Usability | Target users can complete predefined representative tasks within the limits established by the research protocol. |
 | Satisfaction | User satisfaction is measured and meets the threshold defined before the formal evaluation begins. |

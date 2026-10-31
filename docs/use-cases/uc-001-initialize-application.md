@@ -32,6 +32,15 @@ Allows the user to open the application and access locally stored study data wit
 3. When the user completes or skips onboarding, the system opens the deck library as described in step 5 of the basic flow.
 4. The use case ends.
 
+### 4.3. Exception Flows
+
+#### FE01: Local Data Cannot Be Initialized or Read
+
+1. Initialization or reading the onboarding/study state fails.
+2. Keep dependent flows unavailable, preserve existing data, and offer **Tentar novamente** and **Saiba mais** with the known cause.
+3. Retry initialization/reading before choosing onboarding or the library. Opening details does not modify data or retry automatically.
+4. A read failure is not an empty library, zero progress, or proof that onboarding was never completed. Do not erase data or reset completion to recover silently.
+
 ## 5. Postconditions
 
 - On successful launch, local study data is available and the user reaches either onboarding or the deck library according to the recorded onboarding state.

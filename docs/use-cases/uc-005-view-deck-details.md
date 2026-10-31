@@ -17,7 +17,7 @@ Allows the user to view an imported deck's information and cards, identify flagg
 ### 4.1. Basic Flow — Main Path
 
 1. The system retrieves the deck's information and associated cards from local storage.
-2. The system displays the deck's main information, its card list, and actions to study, edit, or delete the deck. Advanced FSRS information is available in an initially collapsed section after the main deck information.
+2. The system displays the deck's main information, its card list, and actions to study, edit, or delete the deck. There is no separate advanced FSRS section or next-review date in Phase 1. Deck/card actions remain distinct from rating actions.
 3. The user browses the deck's cards and information. The system identifies cards that have a flag.
 4. The user may select an available action or leave the deck details after viewing them.
 
@@ -49,6 +49,14 @@ Allows the user to view an imported deck's information and cards, identify flagg
 
 1. At step 4 of the basic flow, the user selects Delete Deck.
 2. The system opens the deck-deletion flow (UC07).
+
+### 4.3. Exception Flows
+
+#### FE01: Deck or Card-List Read Fails
+
+1. Reading the selected deck or its cards fails.
+2. Preserve the valid origin and saved data; show Tentar novamente and Saiba mais. Do not replace the failure with an empty list or zero progress.
+3. Retry reading or return to the library. If the identifier is no longer valid, return safely without showing another deck's content or starting study.
 
 ## 5. Postconditions
 

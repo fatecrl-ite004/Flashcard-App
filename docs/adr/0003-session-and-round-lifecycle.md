@@ -5,12 +5,13 @@
 - **Date:** 2026-10-28
 - **Owner:** Enzo
 - **Status:** Proposed
+- **Product-contract revision:** 2026-10-31. The owner chose session closure before the summary and a new session for further study, replacing the earlier multi-round-session proposal. Architecture remains Proposed.
 
 ## Context
 
-Flashcard App starts study from an open deck. A session can contain multiple voluntary rounds, each following the session's choice of an enabled or disabled distinct-card limit. Due-card priority, automatic new-card suggestions, voluntary extra new cards, and same-day due-only continuation are defined in the system specification and UC08.
+Flashcard App starts study from an open deck. A session contains its selected round and ends when its final eligible rating is confirmed. Voluntary further study starts a new session with a fresh limit choice. Due-card priority, automatic new-card suggestions, voluntary extra new cards, and same-day due-only continuation are defined in the system specification and UC08.
 
-The interface needs to preserve a coherent study experience while each rating is calculated and saved. Round completion, leaving the review flow, temporarily backgrounding the application, and terminating its process have different effects on that experience.
+The interface needs to preserve a coherent study experience while each rating is calculated and saved. Completed-session summary, early exit, backgrounding and process termination have distinct presentation and recovery effects.
 
 The user has confirmed that returning from the background while the application remains in execution must preserve the same session, round, queue, and undo availability. Closing the application must preserve evaluated information through the existing guarantee that each confirmed rating is saved before the next card appears. UC08 already specifies starting a new session from consistent stored state after an abrupt application interruption.
 
@@ -22,7 +23,7 @@ ADR 0001 proposes domain-owned rules with application coordination. ADR 0002 pro
 
 Keep the live session and round state under application coordination, independently of individual screens and hooks. Persist confirmed study effects and the daily state required across sessions through explicit persistence boundaries.
 
-1. **A session belongs to one deck and can contain multiple rounds.** Starting study establishes the deck, assigned study day, captured timezone context, and the user's round-limit choice. That choice applies to every round in the session. Starting a new round within the same session preserves this context. Starting a later session follows the preparation flow again, including a fresh limit choice with the limit enabled by default.
+1. **A session belongs to one deck and its selected round.** Starting study establishes the deck, assigned study day, captured timezone context, and limit choice. The final eligible rating closes this session before its summary. Further study follows preparation again, including a fresh study day, eligibility calculation, and limit choice enabled by default. Same-day saved continuation remains governed by RN-008.
 
 2. **Domain operations determine eligibility and round policy.** Application use cases obtain current saved data and explicit time inputs, ask the domain to apply the accepted rules, and coordinate any required persistence before exposing a prepared round. The domain determines due eligibility, accepted capacity, suggested new cards, and count effects. The application maintains the live round's selected card identities, current position, and operation status using those results. Concrete types and operation signatures belong in the architecture documentation when designed.
 
@@ -32,7 +33,7 @@ Keep the live session and round state under application coordination, independen
 
 5. **Complete a round when no card in it is eligible now.** After confirmed operations, evaluate the round against the explicit current instant. Present the next eligible card when one exists. Otherwise, complete the round immediately and offer the applicable UC08 completion actions. A future due instant does not keep the round waiting or permit an early review. The card retains its FSRS schedule and can be selected when due in a later round or session. Repeated presentations remain subject to the accepted distinct-card count and do not imply a repeat-until-correct loop.
 
-6. **Round completion and session end are distinct transitions.** Completing a round presents its feedback and voluntary continuation choices. Another round starts only through an applicable user choice. Returning to the deck or library, or explicitly finishing study, ends the session. Ending a session preserves all confirmed ratings and does not rate the remaining cards. Undo reverses confirmed ratings one at a time in reverse order across all rounds of the active session, until no rating from that session remains to undo. Round completion and backgrounding preserve that sequence. Its consistency mechanism is developed in ADR 0004.
+6. **The completed-round summary follows session closure.** After the final eligible rating is confirmed, close the session and its Undo and show a read-only four-block summary under RF-025. Estudar mais explicitly starts another session. Returning from the summary cannot resume the old queue or Undo. Ending early preserves confirmed ratings without showing a completed-session summary. The former multi-round active-session design is replaced by the owner's 2026-10-31 product decision.
 
 7. **Backgrounding preserves live state while execution survives.** Returning to the foreground retains the same session, round, queue position, current-card presentation state, limit choice, captured time context, and full remaining undo sequence for the active session. Obtain a fresh current instant when evaluating eligibility or submitting a new rating. Passing a boundary while backgrounded does not change the session's assigned study day. If an operation was unresolved, reconcile its outcome before advancing. Domain code does not observe platform lifecycle events directly.
 
@@ -64,7 +65,7 @@ This decision defines state ownership and lifetime. Storage technology, persiste
 - The application needs a cohesive owner for live session and round state outside the lifetime of individual UI components. Its concrete module structure remains to be designed.
 - Platform lifecycle handling must distinguish returning to an existing process from reopening after process termination. The domain receives explicit operations and time inputs through the application boundary.
 - Foreground restoration must preserve session identity and context while checking any unresolved operation before further interaction can advance the queue.
-- A completion screen belongs to the active session until the user ends study or chooses a valid continuation. Sequential undo remains available across round boundaries while that session is active.
+- The completed-session summary is read-only with no Undo. Further study creates a new session; same-day due-only continuation survives independently of the ended session.
 - The persistence design must support progress and daily-policy recovery without requiring restoration of the old active queue. Any stored undo information must not make a previous session's rating undoable from a new session.
 - Required validation includes background and foreground transitions with the same queue and undo availability; backgrounding across a study-day boundary; interruption after a confirmed rating; an interrupted operation with uncertain confirmation; same-day overflow continuation after reopening; and immediate round completion with only future-scheduled cards remaining.
 - This ADR records proposed architecture and approved lifecycle behavior. Runtime behavior, persistence consistency, and recovery remain unverified until corresponding implementation and validation evidence exist.

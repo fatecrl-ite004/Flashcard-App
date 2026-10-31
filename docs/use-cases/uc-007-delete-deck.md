@@ -38,10 +38,12 @@ Allows the user to permanently remove a deck from the local library, including i
 
 #### FE01: Local Storage Failure During Deletion
 
-1. At step 3 of the basic flow, a device or local storage failure interrupts the deletion.
-2. The system rolls back the atomic transaction so that no associated data is partially deleted or corrupted.
-3. The system alerts the user: "The deck could not be deleted because of a local storage error."
-4. The deletion ends, and the user returns to the deck details (UC05).
+1. At step 3 of the basic flow, local storage confirms that the deletion failed because of a device or storage problem. An unresolved outcome must not be presented as a confirmed failure or success.
+2. The system rolls back the atomic transaction so that the deck and all its associated data remain intact, without partial deletion or corruption.
+3. The system returns the user to the deck details (UC05) and displays a local notification: **Não foi possível excluir o deck.** (The deck could not be deleted.) It offers **Tentar novamente** (Retry) and **Saiba mais** (Learn more).
+4. Saiba mais exposes the known cause and available diagnostic details. Opening or closing these details neither modifies the deck nor starts another deletion.
+5. Tentar novamente returns to step 1 of the basic flow and requires a new explicit deletion confirmation. It does not execute another deletion immediately. Canceling that confirmation follows FA01; confirming follows the normal atomic deletion flow.
+6. The user may instead remain on the deck details or navigate normally. No retry occurs automatically, and the confirmed failure preserves all deck data.
 
 ## 5. Postconditions
 

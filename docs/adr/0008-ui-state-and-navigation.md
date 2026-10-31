@@ -5,6 +5,7 @@
 - **Date:** 2026-10-28
 - **Owner:** Enzo
 - **Status:** Proposed
+- **Product-contract revision:** 2026-10-31. One library root, avatar preferences, and session closure before summary are reflected below; architecture remains Proposed.
 
 ## Context
 
@@ -34,11 +35,11 @@ Use Expo Router for navigation and React's built-in facilities for presentation 
 
 7. **Refresh dependent views through application reads.** The database remains authoritative for persisted information. After a successful mutation, update or reload affected presentation data through the relevant application operations. Re-entering a deck or library must not show an obsolete summary as current. Current time and saved state must be supplied to the existing rules when recalculating availability; presentation code must not reproduce those calculations. Exact refresh triggers and read representations belong in the concrete UI design.
 
-8. **Coordinate navigation with the accepted session lifecycle.** Returning to the deck or library or explicitly finishing study ends the session through application coordination. Android Back, navigation gestures, and visible exit actions must reach the same exit behavior when they leave study. Opening and closing a flag interaction within review preserves the same card and session. A component unmount or background event alone is not an instruction to end study. Handle unresolved operations according to the existing reconciliation and exit flows; navigation must not convert an uncertain rating into a presumed failure or a duplicate submission.
+8. **Coordinate navigation with the accepted session lifecycle.** The library is the sole root, with avatar access to essential preferences and no bottom tabs. The final eligible confirmed rating closes the session before its summary; further study starts a new session.  Returning to the deck or library or explicitly finishing study ends the session through application coordination. Android Back, navigation gestures, and visible exit actions must reach the same exit behavior when they leave study. Opening and closing a flag interaction within review preserves the same card and session. A component unmount or background event alone is not an instruction to end study. Handle unresolved operations according to the existing reconciliation and exit flows; navigation must not convert an uncertain rating into a presumed failure or a duplicate submission.
 
 9. **Initialize before exposing dependent flows.** Application startup makes local data available and reads onboarding state before selecting the appropriate initial flow under UC01. Initialization and migration failures must not expose study against unavailable or incompatible storage. Reopening after process termination follows the new-session behavior in ADR 0003; restoring a navigation destination must not revive the previous queue or undo availability.
 
-The route hierarchy, visible navigation controls, exact providers, screen contracts, subscription implementation, and package versions remain implementation-design details. This decision does not add persisted navigation state, automatic active-session restoration, remote data fetching, or a second persistence mechanism.
+The product-level destinations and Back contract are recorded in [the Figma handoff](../ux/phase-1-figma-handoff.md). Route-file structure, exact providers, subscription implementation, and package versions remain implementation-design details. This decision does not add persisted navigation state, automatic active-session restoration, remote data fetching, or a second persistence mechanism.
 
 ## Rationale
 

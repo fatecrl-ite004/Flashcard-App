@@ -57,9 +57,18 @@ Allows the user to view an individual card outside a review session and to add, 
 
 #### FE01: Local Save Failure
 
-1. During a flag addition, note edit, or flag removal, local storage fails to save the change.
-2. The system preserves the previously stored flag and note and explains that the change was not saved.
-3. The user may retry or return to the current card without changing its flag state.
+1. During a flag addition, note edit, or flag removal, local storage confirms that the change could not be saved. An unresolved outcome must not be presented as a confirmed failure or success.
+2. The system preserves the previously stored flag and note together. A failed addition does not mark the card as successfully flagged; a failed edit keeps the stored note; a failed removal keeps both the flag and its note.
+3. For an addition or note edit, the system retains the attempted note text while the flag editor remains open, identifies it as **não salvo** (not saved), and does not replace it with the stored note. Clearing a note is also an attempted change that can be retried.
+4. A local error notification explains that the flag change could not be saved and offers **Tentar novamente** (Retry) and **Saiba mais** (Learn more).
+5. Retry repeats the same attempted flag action for the same card, retaining the entered or cleared note without requiring re-entry. Saiba mais exposes the known cause and available diagnostic details; opening or closing it neither changes the flag or note nor submits another action.
+6. The user may retry or return to the current card with the stored flag and note unchanged. During review, the same card and active session remain in place; the failed action, diagnostic view, and retry do not rate or reschedule the card or change review/study-day counts. A successful retry updates only the flag and its optional note.
+
+#### FE02: Individual Card Read Fails
+
+1. Reading the selected card or its saved flag/note fails.
+2. Preserve the valid deck/review origin and offer Tentar novamente and Saiba mais. Do not show an absent card, empty note, or unflagged state as a successful read.
+3. Retry reading or return safely to the origin. An invalid card/deck relationship must not open another card. A route alone cannot create a study session.
 
 ## 5. Postconditions
 
