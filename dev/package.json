@@ -1,0 +1,27 @@
+{
+  "name": "flashcard-domain-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "playground": "node --import tsx scripts/playground.ts",
+    "scenario:create": "node --import tsx scripts/scenarios/01-create-card.ts",
+    "scenario:again": "node --import tsx scripts/scenarios/02-review-again.ts",
+    "scenario:hard": "node --import tsx scripts/scenarios/03-review-hard.ts",
+    "scenario:good": "node --import tsx scripts/scenarios/04-review-good.ts",
+    "scenario:easy": "node --import tsx scripts/scenarios/05-review-easy.ts",
+    "scenario:all": "node --import tsx scripts/scenarios/06-all-ratings.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ts-fsrs": "5.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
